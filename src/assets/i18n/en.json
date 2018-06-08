@@ -1,0 +1,21 @@
+{
+  "login": "Login",
+  "remember_user": "Remember account",
+  "home": "Home",
+  "publish": "Publish",
+  "personal": "Personal",
+  "detail": "Detail",
+  "title": "Title",
+  "image_upload": "Image upload",
+  "phone_number": "Phone number",
+  "first_name": "First name",
+  "my_publish": "My publish",
+  "my_favorite": "My favorite",
+  "my_share": "My share",
+  "contact": "Contact",
+  "clean_cache": "Clean cache",
+  "about": "About",
+  "price": "Price",
+  "man_Woman": "Man/Woman",
+  "changeLang": "Change language"
+}

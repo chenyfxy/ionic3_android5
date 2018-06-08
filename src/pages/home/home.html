@@ -1,17 +1,62 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>Home</ion-title>
+  <ion-navbar color="primary" no-border-bottom *ngIf="isMyItem || isMyFa">
+    <ion-title *ngIf="isMyItem">{{ 'my_publish' | translate }}</ion-title>
+    <ion-title *ngIf="isMyFa">{{ 'my_favorite' | translate }}</ion-title>
   </ion-navbar>
+
+  <ion-toolbar color="primary" no-border-top>
+    <ion-searchbar placeholder="Search" (ionInput)="getItems($event)">
+    </ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing ...">
+
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let it of items">
+      <ion-item (click)="gotoDetail(it)">
+        <ion-thumbnail item-start>
+          <img src="{{it.imageArray[0]}}" *ngIf="it.imageArray != null && it.imageArray.length > 0"/>
+        </ion-thumbnail>
+        <h2 class="title">{{it.title}}</h2>
+        <p>{{it.content}}</p>
+        <p class="priceClass">${{it.price}}</p>
+        <ion-note item-end>{{it.createDate}}</ion-note>
+      </ion-item>
+
+      <ion-item-options side="right" *ngIf="isMyItem">
+        <button ion-button color="danger" (click)="deleteItem(it)">
+          <ion-icon name="trash" style="font-size:22px"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <!-- <div class="pro" *ngFor="let item of items, let i = index" (click)="startPage(i);">
+      <div class="pro-warp">
+        <div class="pro-body">
+          <div class="pro-body-des">
+            <a>
+              <img src="../../assets/imgs/{{item.imageArray[0]}}" alt="">
+            </a>
+            <div class="pro-body-des-text">
+              <span>{{item.title}}</span>
+              <span class="dateText">{{item.createDate}}</span>
+              <div class="pro-body-des-con">
+                <span>{{item.content}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div> -->
+
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

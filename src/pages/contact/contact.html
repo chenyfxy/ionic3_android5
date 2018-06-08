@@ -1,17 +1,54 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>
-      Contact
+      {{ 'personal' | translate }}
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-list-header>Follow us on Twitter</ion-list-header>
-    <ion-item>
-      <ion-icon name="ionic" item-start></ion-icon>
-      @ionicframework
-    </ion-item>
+<ion-content class="bg-color">
+  <ion-list class="top-list">
+    <button ion-item>
+      <ion-avatar item-left>
+        <img src="./assets/imgs/{{userAvatar}}" />
+      </ion-avatar>
+      <h2>{{userNickName}}</h2>
+    </button>
   </ion-list>
+
+  <ion-list>
+    <button ion-item (click)="gotoHome(false)">
+      <ion-icon name="add-circle" item-start color="primary"></ion-icon>
+      {{ 'my_publish' | translate}}
+    </button>
+    <button ion-item (click)="gotoHome(true)">
+      <ion-icon name="star-outline" item-start color="danger"></ion-icon>
+      {{ 'my_favorite' | translate}}
+    </button>
+    <button ion-item (click)="shareItem()">
+      <ion-icon name="share" item-start color="primary"></ion-icon>
+      {{ 'my_share' | translate}}
+    </button>
+    <button ion-item (click)="callPhone()">
+      <ion-icon name="call" item-start color="secondary"></ion-icon>
+      {{ 'contact' | translate}}
+    </button>
+  </ion-list>
+
+  <ion-list>
+    <button ion-item (click)="clearStorage()">
+      <ion-icon name="trash" item-start color="danger"></ion-icon>
+      {{ 'clean_cache' | translate }}
+    </button>
+    <button ion-item (click)="showAbout()">
+      <ion-icon name="information-circle" item-start color="primary"></ion-icon>
+      {{ 'about' | translate }}
+    </button>
+  </ion-list>
+
+  <div padding style="margin-top: -15px">
+    <button ion-button block (click)="logout()">
+      {{ 'logout' | translate }}
+    </button>
+  </div>
 </ion-content>

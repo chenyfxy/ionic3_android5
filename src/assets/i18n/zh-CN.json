@@ -1,0 +1,21 @@
+{
+  "login": "登录",
+  "remember_user": "记住用户",
+  "home": "首页",
+  "publish": "发布",
+  "personal": "个人中心",
+  "detail": "详情",
+  "title": "标题",
+  "image_upload": "图片上传",
+  "phone_number": "手机号码",
+  "first_name": "姓",
+  "my_publish": "我的发布",
+  "my_favorite": "我的收藏",
+  "my_share": "我的分享",
+  "contact": "联系",
+  "clean_cache": "清理缓存",
+  "about": "关于",
+  "price": "价格",
+  "man_Woman": "男/女",
+  "changeLang": "改变语言"
+}

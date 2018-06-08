@@ -1,3 +1,24 @@
 page-home {
+    .bg-color{
+      background-color: #efeeee;
+    }
+    .title {
+      margin-bottom: 5px;
+      overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: nowrap;
+        -webkit-line-clamp: 1;
+    }
+
+    .priceClass {
+      color: #337ab7;
+      margin-top: 5px;
+    }
+
+    ion-note {
+      font-size: 12px;
+      align-self: flex-start;
+      margin-top: 14px;
+  }
 
 }
