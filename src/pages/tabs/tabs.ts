@@ -21,13 +21,11 @@ export class TabsPage {
     this.tabRoots = [ { root: HomePage, tabTitle: 'home', tabIcon: 'home' }, 
     { root: AboutPage, tabTitle: 'publish', tabIcon: 'add-circle' }, 
     { root: ContactPage, tabTitle: 'personal', tabIcon: 'person' } ];
-    
   }
 
   tabChange(tab: Tab) {
     let currentIndex = this.tabRef.getIndex(tab);
 
-    this.events.publish(EVENTS_KEY.REFRESH_TAB_PAGE);
     if (currentIndex == 2) {
       this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((value) => {
         if (value == null) {
@@ -36,7 +34,11 @@ export class TabsPage {
       })
     }
   }
-  
+
+  tabSelect() {
+    this.events.publish(EVENTS_KEY.REFRESH_TAB_PAGE);
+  }
+
   ionViewDidEnter() {
     this.events.subscribe('user:login', () => {
       let currentTab = this.tabRef.getSelected();

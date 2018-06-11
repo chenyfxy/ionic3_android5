@@ -28,7 +28,6 @@ export class ContactPage {
     this.initDatas();
 
     this.events.subscribe(EVENTS_KEY.REFRESH_TAB_PAGE, () => {
-      console.log("comeh ere")
       this.initDatas();
     });
   }
@@ -54,7 +53,6 @@ export class ContactPage {
               if (user_list[i].userName === value) {
                 this.userAvatar = user_list[i].avatar;
                 this.userNickName = user_list[i].nickName;
-                console.log("userAvatar:" + this.userAvatar);
                 break;
               }
             }

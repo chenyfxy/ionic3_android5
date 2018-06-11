@@ -25,13 +25,16 @@ export class HomePage {
     this.events.subscribe(EVENTS_KEY.REFRESH_HOME, (data) => {
       this.isMyItem = data.isMyItem;
       this.isMyFa = data.isMyFa;
-      
-      console.log("isMyItem: " + this.isMyItem + ", isMyFa:" + this.isMyFa)
+      console.log(this.isMyItem + ", " + this.isMyFa)
+
       this.initItemList();
+
+      this.events.unsubscribe(EVENTS_KEY.REFRESH_HOME);
     });
 
     this.events.subscribe(EVENTS_KEY.REFRESH_TAB_PAGE, () => {
       this.initItemList();
+      // this.events.unsubscribe(EVENTS_KEY.REFRESH_TAB_PAGE);
     })
   }
 
@@ -123,13 +126,12 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    this.initItemList();
-
-    console.log('favorite:')
+    
   }
 
-  ionViewDidEnter() {
-    //this.viewCtrl.dismiss();
+  ionViewWillLeave() {
+    this.isMyItem = false;
+    this.isMyFa = false;
   }
 
   getItems(ev: any) {
@@ -206,7 +208,11 @@ export class HomePage {
 
   gotoDetail(item) {
     let data: Object = {
-      item: item
+      item: item,
+      dataParam: {
+        'isMyItem': this.isMyItem,
+        'isMyFa': this.isMyFa
+      }
     };
     this.navCtrl.push(DetailPage, data);
   }

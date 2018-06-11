@@ -45,26 +45,6 @@ export class LoginPage {
     this.initFormGroup();
   }
 
-  ionViewDidLoad() {
-    let elem = document.querySelectorAll(".tabbar");
-
-    if (elem != null) {
-      Object.keys(elem).map((key) => {
-        elem[key].style.display ='none';
-      });
-    }
-  }
-
-  ionViewWillLeave(){
-    let elem = document.querySelectorAll(".tabbar");
-
-    if (elem != null) {
-      Object.keys(elem).map((key) => {
-        elem[key].style.display ='flex';
-      });
-    }
-  }
-
   setDefaultValues() {
     this.storage.get(SESSION_KEY.LOGIN_USER).then((value) => {
       if (value != null) {

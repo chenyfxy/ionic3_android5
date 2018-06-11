@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NavParams, NavController} from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavParams, NavController, Navbar, Events} from 'ionic-angular';
 import { ItemModel } from '../model/ItemModel';
 import { CallNumber } from '@ionic-native/call-number';
 import { SocialSharing } from '@ionic-native/social-sharing';
@@ -7,6 +7,7 @@ import { ToastUtils } from '../utils/ToastUtils';
 import { Storage } from '@ionic/storage';
 import { SESSION_KEY } from '../config/session_key';
 import { TabsPage } from '../tabs/tabs';
+import { EVENTS_KEY } from '../config/events_key';
 
 /**
  * Generated class for the DetailPage page.
@@ -20,15 +21,17 @@ import { TabsPage } from '../tabs/tabs';
   templateUrl: 'detail.html',
 })
 export class DetailPage {
-
+  @ViewChild(Navbar) navBar: Navbar;
   item: ItemModel;
   images: string[];
   showStar: boolean = false;
+  dataParam: any;
 
   constructor(public navParams: NavParams, private callNumber: CallNumber, private sharing: SocialSharing,
-  private toastUtils: ToastUtils, private storage: Storage, public navCtrl: NavController) {
+  private toastUtils: ToastUtils, private storage: Storage, public navCtrl: NavController, public events: Events) {
     this.item = new ItemModel();
     this.item = this.navParams.get('item');
+    this.dataParam = this.navParams.get('dataParam');
 
     this.images = this.item.imageArray;
 
@@ -43,6 +46,12 @@ export class DetailPage {
         elem[key].style.display ='none';
       });
     }
+
+    this.navBar.backButtonClick = this.backButtonClick;
+  }
+
+  backButtonClick(e: UIEvent) {
+    this.navCtrl.setRoot(TabsPage);
   }
 
   ionViewWillLeave(){
@@ -54,6 +63,7 @@ export class DetailPage {
       });
     }
 
+    this.events.publish(EVENTS_KEY.REFRESH_HOME, this.dataParam);
     // this.navCtrl.setRoot(TabsPage);
   }
 

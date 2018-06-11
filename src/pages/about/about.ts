@@ -96,8 +96,9 @@ export class AboutPage {
     this.imagePicker.getPictures(options).then((results) => {
       for (var i = 0; i < results.length; i++) {
         this.images.push(results[i]);
-        this.toastUtils.showToast("Image upload successfully!", "top");
       }
+
+      this.toastUtils.showToast("Image upload successfully!", "top");
     }, (err) => {
       console.log('获取图片失败');
     });
