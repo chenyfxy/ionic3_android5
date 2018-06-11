@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController, Events } from 'ionic-angular';
 
 import { LoginPage } from '../login/login'
 import { ItemModel } from '../model/ItemModel';
@@ -7,10 +7,10 @@ import { SESSION_KEY } from '../config/session_key';
 
 import { ToastUtils } from '../utils/ToastUtils';
 
-import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer';
-import { File } from '@ionic-native/file';
-import { Camera } from '@ionic-native/camera';
-import { FileChooser } from '@ionic-native/file-chooser';
+// import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer';
+// import { File } from '@ionic-native/file';
+// import { Camera } from '@ionic-native/camera';
+// import { FileChooser } from '@ionic-native/file-chooser';
 
 import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker';
 
@@ -19,6 +19,7 @@ import { user_list } from '../data/userData';
 import { formatDate } from '../utils/utils';
 import { HomePage } from '../home/home';
 import { TabsPage } from '../tabs/tabs';
+import { EVENTS_KEY } from '../config/events_key';
 
 @Component({
   selector: 'page-about',
@@ -33,9 +34,20 @@ export class AboutPage {
   loginUserName: any;
 
   constructor(public navCtrl: NavController, private toastUtils: ToastUtils, private storage: Storage,
-    private transfer: FileTransfer, private file: File, private camera: Camera, private fileChooser: FileChooser,
-    private imagePicker: ImagePicker, private alertCtrl: AlertController) {
+    private imagePicker: ImagePicker, private alertCtrl: AlertController, public events: Events) {
 
+    this.initDatas();
+
+    this.events.subscribe(EVENTS_KEY.REFRESH_TAB_PAGE, () => {
+      this.initDatas();
+    });
+  }
+
+  ionViewDidLoad() {
+
+  }
+
+  initDatas() {
     this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((value) => {
       if (value != null) {
         const userSize = user_list.length;
@@ -49,6 +61,15 @@ export class AboutPage {
       }
     });
     this.item = new ItemModel();
+    this.item.title = "";
+    this.item.content = "";
+    this.item.price = null;
+    this.item.phoneNumber = null;
+    this.item.firstName = "";
+    this.item.imageArray = this.images;
+
+    this.images = [];
+    this.man = false;
   }
 
   choosePhoto() {
@@ -83,32 +104,47 @@ export class AboutPage {
   }
 
   publish() {
-    if (this.item.title != '' && this.item.content != '' && this.images.length > 0 && this.item.price != null && this.item.phoneNumber != null && this.item.firstName != '') {
-      this.storage.get(SESSION_KEY.ALL_ITEMS).then(value => {
-        if (value != null) {
-          let list : ItemModel[] = value;
-  
-          this.item.id = list[0].id + 1;
-          this.item.imageArray = this.images;
-          this.item.sex = this.man ? "Mr" : "Mrs";
-          this.item.seller = this.loginUserName;
-          this.item.createDate = formatDate(new Date());
+    this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((data) => {
 
-          list.unshift(this.item);
+      if (data != null) {
+        if (this.item.title != '' && this.item.content != '' && this.images.length > 0 && this.item.price != null && this.item.phoneNumber != null && this.item.firstName != '') {
+          this.storage.get(SESSION_KEY.ALL_ITEMS).then(value => {
+            if (value != null) {
+              let list: ItemModel[] = value;
 
-          this.storage.set(SESSION_KEY.ALL_ITEMS, list);
+              this.item.id = list[0].id + 1;
+              this.item.imageArray = this.images;
+              this.item.sex = this.man ? "Mr" : "Mrs";
+              this.item.seller = this.loginUserName;
+              this.item.createDate = formatDate(new Date());
 
-          this.toastUtils.showToast('Publish successfully!', 'top');
+              list.unshift(this.item);
 
-          this.navCtrl.parent.select(0);
+              this.storage.set(SESSION_KEY.ALL_ITEMS, list);
+
+              this.toastUtils.showToast('Publish successfully!', 'top');
+
+              let data = {
+                'isMyItem': false,
+                'isMyFa': false
+              }
+              this.events.publish(EVENTS_KEY.REFRESH_HOME, data);
+
+              this.navCtrl.parent.select(0);
+            }
+          })
+        } else {
+          let alert = this.alertCtrl.create({
+            message: "Please input these values!",
+            buttons: ['OK']
+          })
+          alert.present();
         }
-      })
-    } else {
-      let alert = this.alertCtrl.create({
-        message: "Please input these values!",
-        buttons: ['OK']
-      })
-      alert.present();
-    }
-  } 
+
+      } else {
+        this.navCtrl.setRoot(LoginPage);
+      }
+
+    });
+  }
 }

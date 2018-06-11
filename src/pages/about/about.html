@@ -23,8 +23,8 @@
       <ion-label color="dark">{{ 'image_upload' | translate }}</ion-label>
     </ion-item>
     <ion-item>
-      <ion-thumbnail *ngFor="let imageItem of images" item-end style="border-radius: 4px;">
-        <img [src]="imageItem" width="80px" height="80px" imageViewer/>
+      <ion-thumbnail *ngFor="let imageItem of images" item-end style="border-radius: 4px;" >
+        <img [src]="imageItem" width="80px" height="80px" imageViewer *ngIf="images.length > 0"/>
       </ion-thumbnail>
 
       <a ion-thumbnail (click)="choosePhoto()" text-center item-end style="border:1px dotted #888585; border-radius: 4px;width:80px;height:80px;line-height:80px;vertical-align: middle;">

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, ModalController } from 'ionic-angular';
+import { NavController, AlertController, ModalController, Events } from 'ionic-angular';
 import { SESSION_KEY } from '../config/session_key';
 import { LoginPage } from '../login/login';
 import { UserService } from '../services/UserService';
@@ -8,6 +8,7 @@ import { user_list } from '../data/userData';
 import { HomePage } from '../home/home';
 import { CallNumber } from '@ionic-native/call-number';
 import { SocialSharing } from '@ionic-native/social-sharing';
+import { EVENTS_KEY } from '../config/events_key';
 
 
 @Component({
@@ -21,8 +22,22 @@ export class ContactPage {
   result: any;
 
   constructor(public navCtrl: NavController, private userService: UserService, public storage: Storage,
-  public callNumber: CallNumber, private alertCtrl: AlertController, private sharing: SocialSharing, public modalCtrl: ModalController) {
+  public callNumber: CallNumber, private alertCtrl: AlertController, private sharing: SocialSharing, public modalCtrl: ModalController,
+  public events: Events) {
 
+    this.initDatas();
+
+    this.events.subscribe(EVENTS_KEY.REFRESH_TAB_PAGE, () => {
+      console.log("comeh ere")
+      this.initDatas();
+    });
+  }
+
+  ionViewDidLoad() {
+    
+  }
+
+  initDatas() {
     this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((value) => {
       if (value != null) {
         // this.userService.getUserByName(value).then(
@@ -51,23 +66,19 @@ export class ContactPage {
     })
   }
 
-  ionViewDidLoad() {
-  }
-
   gotoHome(isFav) {
     let myItem = !isFav;
     let myFav = isFav;
 
-    let data : Object = {
-      isMyItem: myItem,
-      isMyFa: myFav
+    let data = {
+      'isMyItem': myItem,
+      'isMyFa': myFav
     }
-    // this.navCtrl.pop();
-    // this.navCtrl.setRoot(HomePage, data);
+    this.events.publish(EVENTS_KEY.REFRESH_HOME, data);
 
-    let modal = this.modalCtrl.create(HomePage, data);
-    modal.present();
-    // this.navCtrl.parent.select(0);
+    // let modal = this.modalCtrl.create(HomePage, data);
+    // modal.present();
+    this.navCtrl.parent.select(0);
     // this.navCtrl.push(HomePage, data);
   }
 
@@ -92,7 +103,7 @@ export class ContactPage {
     })
     alert.present();
 
-    this.navCtrl.push(LoginPage);
+    this.navCtrl.setRoot(LoginPage);
   }
 
   showAbout() {
@@ -106,6 +117,6 @@ export class ContactPage {
 
   logout() {
     this.storage.remove(SESSION_KEY.LOGIN_USERNAME);
-    this.navCtrl.push(LoginPage);
+    this.navCtrl.setRoot(LoginPage);
   }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, App} from 'ionic-angular';
+import { NavController, NavParams, App, Events, Tabs} from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpService } from "../services/HttpService";
 import { Storage } from '@ionic/storage';
@@ -10,6 +10,7 @@ import { SERVER_URL } from '../config/url_config';
 import { TranslateService } from 'ng2-translate';
 import { TabsPage } from '../tabs/tabs';
 import { user_list } from '../data/userData';
+import { EVENTS_KEY } from '../config/events_key';
 
 /**
  * Generated class for the LoginPage page.
@@ -33,7 +34,8 @@ export class LoginPage {
   pwshow: boolean = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, private formBuilder: FormBuilder,
-    private httpService: HttpService, private toastUtils : ToastUtils, private keyboard: Keyboard, private translate: TranslateService) {
+    private httpService: HttpService, private toastUtils : ToastUtils, private keyboard: Keyboard, private translate: TranslateService,
+    public events: Events) {
 
     this.setDefaultValues();
     this.translate.addLangs(['zh-CN', 'en']);
@@ -69,7 +71,6 @@ export class LoginPage {
         this.nameValue = value.userName;
         this.psValue = value.password;
         this.checkedUser = true;
-        console.log("newValue0:" + this.nameValue);
 
         this.initFormGroup();
       }
@@ -109,8 +110,10 @@ export class LoginPage {
 
         this.storage.set(SESSION_KEY.LOGIN_USERNAME, this.loginForm.value.userName);
 
-        // this.appCtrl.getRootNav().push(TabsPage);
-        this.navCtrl.parent.select(0);
+        this.events.publish(EVENTS_KEY.USER_LOGIN); // refresh page
+
+        this.navCtrl.setRoot(TabsPage);
+        // this.navCtrl.parent.select(1);
       }
     }
 

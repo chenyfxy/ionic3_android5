@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ViewController } from 'ionic-angular';
+import { NavController, NavParams, ViewController, Events } from 'ionic-angular';
 import { item_list } from '../data/itemData';
 import { ItemModel } from '../model/ItemModel';
 import { DetailPage } from '../detail/detail';
@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 import { SESSION_KEY } from '../config/session_key';
 import { user_list } from '../data/userData';
 import { sortItem } from '../utils/utils';
+import { EVENTS_KEY } from '../config/events_key';
 
 const base_img_src = './assets/imgs/item/';
 
@@ -20,8 +21,18 @@ export class HomePage {
   isMyItem: boolean = false;
   isMyFa: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParam: NavParams, public storage: Storage, public viewCtrl: ViewController) {
-    
+  constructor(public navCtrl: NavController, public navParam: NavParams, public storage: Storage, public viewCtrl: ViewController, public events: Events) {
+    this.events.subscribe(EVENTS_KEY.REFRESH_HOME, (data) => {
+      this.isMyItem = data.isMyItem;
+      this.isMyFa = data.isMyFa;
+      
+      console.log("isMyItem: " + this.isMyItem + ", isMyFa:" + this.isMyFa)
+      this.initItemList();
+    });
+
+    this.events.subscribe(EVENTS_KEY.REFRESH_TAB_PAGE, () => {
+      this.initItemList();
+    })
   }
 
   initItemList() {
@@ -67,11 +78,7 @@ export class HomePage {
   }
 
   filterMyItemsAndFavorite() {
-    let data = this.navParam.get("isMyItem");
-
-    if (data != null && data) {
-      this.isMyItem = data;
-
+    if (this.isMyItem) {
       this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((value) => {
         if (value != null) {
           let myName = '';
@@ -101,11 +108,7 @@ export class HomePage {
       })
     }
 
-    let favorite = this.navParam.get("isMyFa");
-   
-    if (favorite != null && favorite) {
-      this.isMyFa = favorite;
-
+    if (this.isMyFa) {
       this.allItems = [];
 
       this.storage.get(SESSION_KEY.FAVORITE_ITEMS).then(value => {
