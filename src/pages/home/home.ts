@@ -28,8 +28,6 @@ export class HomePage {
       console.log(this.isMyItem + ", " + this.isMyFa)
 
       this.initItemList();
-
-      this.events.unsubscribe(EVENTS_KEY.REFRESH_HOME);
     });
 
     this.events.subscribe(EVENTS_KEY.REFRESH_TAB_PAGE, () => {
