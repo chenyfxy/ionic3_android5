@@ -46,7 +46,7 @@ export class LoginPage {
   }
 
   setDefaultValues() {
-    this.storage.get(SESSION_KEY.LOGIN_USER).then((value) => {
+    this.storage.get(SESSION_KEY.REMEMBER_USER).then((value) => {
       if (value != null) {
         this.nameValue = value.userName;
         this.psValue = value.password;
@@ -79,7 +79,7 @@ export class LoginPage {
     _event.preventDefault();
 
     if (this.loginForm.value.checkedUser) {
-      this.storage.set(SESSION_KEY.LOGIN_USER, {"userName": this.loginForm.value.userName, "password": this.loginForm.value.password});
+      this.storage.set(SESSION_KEY.REMEMBER_USER, {"userName": this.loginForm.value.userName, "password": this.loginForm.value.password});
     }
 
     const userSize = user_list.length;

@@ -11,6 +11,7 @@ import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from '../pages/login/login';
 import { DetailPage } from '../pages/detail/detail';
+import { UserEditPage } from '../pages/user-edit/user-edit';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -46,7 +47,8 @@ export function createTranslateLoader(http: Http) {
     HomePage,
     TabsPage,
     LoginPage,
-    DetailPage
+    DetailPage,
+    UserEditPage
   ],
   imports: [
     BrowserModule,
@@ -68,7 +70,8 @@ export function createTranslateLoader(http: Http) {
     HomePage,
     TabsPage,
     LoginPage,
-    DetailPage
+    DetailPage,
+    UserEditPage
   ],
   providers: [
     StatusBar,

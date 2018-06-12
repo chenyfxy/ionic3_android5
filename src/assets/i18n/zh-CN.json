@@ -17,5 +17,8 @@
   "about": "关于",
   "price": "价格",
   "man_Woman": "男/女",
+  "edit_user": "用户修改",
+  "nick_name": "昵称",
+  "new_password": "新密码",
   "changeLang": "改变语言"
 }

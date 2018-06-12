@@ -8,12 +8,12 @@
 
 <ion-content class="bg-color">
   <ion-list class="top-list">
-    <button ion-item>
+    <a ion-item (click)="openModal()">
       <ion-avatar item-left>
-        <img src="./assets/imgs/{{userAvatar}}" />
+        <img src="{{loginUser.avatar}}" />
       </ion-avatar>
-      <h2>{{userNickName}}</h2>
-    </button>
+      <h2>{{loginUser.nickName}}</h2>
+    </a>
   </ion-list>
 
   <ion-list>

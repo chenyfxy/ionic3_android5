@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, ModalController, Events } from 'ionic-angular';
+import { NavController, AlertController, ModalController, Events, NavParams } from 'ionic-angular';
 import { SESSION_KEY } from '../config/session_key';
 import { LoginPage } from '../login/login';
 import { UserService } from '../services/UserService';
@@ -9,7 +9,10 @@ import { HomePage } from '../home/home';
 import { CallNumber } from '@ionic-native/call-number';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { EVENTS_KEY } from '../config/events_key';
+import { UserModel } from '../model/UserModel';
+import { UserEditPage } from '../user-edit/user-edit';
 
+const base_img_url = './assets/imgs/';
 
 @Component({
   selector: 'page-contact',
@@ -17,9 +20,7 @@ import { EVENTS_KEY } from '../config/events_key';
   providers: [UserService]
 })
 export class ContactPage {
-  userNickName: any;
-  userAvatar: any;
-  result: any;
+  loginUser: UserModel = new UserModel();
 
   constructor(public navCtrl: NavController, private userService: UserService, public storage: Storage,
   public callNumber: CallNumber, private alertCtrl: AlertController, private sharing: SocialSharing, public modalCtrl: ModalController,
@@ -42,31 +43,50 @@ export class ContactPage {
   }
 
   initDatas() {
-    this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((value) => {
-      if (value != null) {
-        // this.userService.getUserByName(value).then(
-        //   data => {
-        //     this.result = JSON.parse(JSON.stringify(data));
-        //     console.log(this.result)
-        //     this.userAvatar = this.result.avatar;
-        //     this.userNickName = this.result.nickName;
-        //   }).
-        //   catch(err => {
-            const userSize = user_list.length;
-
-            for (var i=0; i<userSize; i++) {
-              if (user_list[i].userName === value) {
-                this.userAvatar = user_list[i].avatar;
-                this.userNickName = user_list[i].nickName;
-                break;
+    this.storage.get(SESSION_KEY.LOGIN_USER).then((userObj) => {
+      if (userObj == null) {
+        this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((value) => {
+          if (value != null) {
+            // this.userService.getUserByName(value).then(
+            //   data => {
+            //     this.result = JSON.parse(JSON.stringify(data));
+            //     console.log(this.result)
+            //     this.userAvatar = this.result.avatar;
+            //     this.userNickName = this.result.nickName;
+            //   }).
+            //   catch(err => {
+                const userSize = user_list.length;
+    
+                for (var i=0; i<userSize; i++) {
+                  let userObj = user_list[i];
+    
+                  if (userObj.userName === value) {
+                    this.loginUser.id = userObj.id;
+                    this.loginUser.userName = user_list[i].userName;
+                    this.loginUser.password = user_list[i].password;
+                    this.loginUser.nickName = user_list[i].nickName;
+                    this.loginUser.avatar = base_img_url + user_list[i].avatar;
+                    break;
+                  }
+                }
+    
+                this.storage.set(SESSION_KEY.LOGIN_USER, this.loginUser);
+              } else {
+                //this.navCtrl.setRoot(LoginPage);
               }
-            }
-          } else {
-            //this.navCtrl.setRoot(LoginPage);
-          }
-    //     )
-    //   }
-    })
+        //     )
+        //   }
+        })
+      } else {
+        this.loginUser = userObj;
+      }
+    });
+  }
+
+  openModal() {
+    console.log("open user");
+    let modal = this.modalCtrl.create(UserEditPage, {loginUser: this.loginUser});
+    modal.present();
   }
 
   gotoHome(isFav) {
@@ -79,10 +99,7 @@ export class ContactPage {
     }
     this.events.publish(EVENTS_KEY.REFRESH_HOME, data);
 
-    // let modal = this.modalCtrl.create(HomePage, data);
-    // modal.present();
     this.navCtrl.parent.select(0);
-    // this.navCtrl.push(HomePage, data);
   }
 
   shareItem() {

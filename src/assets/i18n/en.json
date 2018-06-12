@@ -17,5 +17,8 @@
   "about": "About",
   "price": "Price",
   "man_Woman": "Man/Woman",
+  "edit_user": "Edit user",
+  "nick_name": "Nick name",
+  "new_password": "New password",
   "changeLang": "Change language"
 }
