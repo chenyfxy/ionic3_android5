@@ -25,15 +25,20 @@ export class ContactPage {
   public callNumber: CallNumber, private alertCtrl: AlertController, private sharing: SocialSharing, public modalCtrl: ModalController,
   public events: Events) {
 
-    this.initDatas();
-
-    this.events.subscribe(EVENTS_KEY.REFRESH_TAB_PAGE, () => {
-      this.initDatas();
-    });
   }
 
-  ionViewDidLoad() {
-    
+  ionViewDidEnter(){
+    let data = {
+      'isMyItem': false,
+      'isMyFa': false
+    }
+    this.events.publish(EVENTS_KEY.REFRESH_HOME, data); 
+
+    this.initDatas();
+  }
+
+  ionViewWillLeave() {
+    console.log("leave page contact")
   }
 
   initDatas() {

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NavParams, NavController, Navbar, Events} from 'ionic-angular';
 import { ItemModel } from '../model/ItemModel';
 import { CallNumber } from '@ionic-native/call-number';
@@ -51,6 +51,7 @@ export class DetailPage {
   }
 
   backButtonClick(e: UIEvent) {
+    // this.navCtrl.pop();
     this.navCtrl.setRoot(TabsPage);
   }
 
@@ -64,6 +65,7 @@ export class DetailPage {
     }
 
     this.events.publish(EVENTS_KEY.REFRESH_HOME, this.dataParam);
+    console.log("leave detail page")
     // this.navCtrl.setRoot(TabsPage);
   }
 

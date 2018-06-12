@@ -15,12 +15,11 @@ import { EVENTS_KEY } from '../config/events_key';
 export class TabsPage {
   @ViewChild('myTabs') tabRef: Tabs;
   tabRoots: Object[];
-  loginIndex: any;
 
   constructor(private storage: Storage, private navCtrl: NavController, public events: Events) {
-    this.tabRoots = [ { root: HomePage, tabTitle: 'home', tabIcon: 'home' }, 
-    { root: AboutPage, tabTitle: 'publish', tabIcon: 'add-circle' }, 
-    { root: ContactPage, tabTitle: 'personal', tabIcon: 'person' } ];
+    this.tabRoots = [{ root: HomePage, tabTitle: 'home', tabIcon: 'home' },
+    { root: AboutPage, tabTitle: 'publish', tabIcon: 'add-circle' },
+    { root: ContactPage, tabTitle: 'personal', tabIcon: 'person' }];
   }
 
   tabChange(tab: Tab) {
@@ -35,16 +34,15 @@ export class TabsPage {
     }
   }
 
-  tabSelect() {
-    this.events.publish(EVENTS_KEY.REFRESH_TAB_PAGE);
+  ionViewDidEnter() {
+    this.events.subscribe(EVENTS_KEY.USER_LOGIN, () => {
+      let currentTab = this.tabRef.getSelected();
+
+      this.tabRef.select(currentTab);
+    });
   }
 
-  ionViewDidEnter() {
-    this.events.subscribe('user:login', () => {
-      let currentTab = this.tabRef.getSelected();
-       this.loginIndex = this.tabRef.getIndex(currentTab);
-
-       this.tabRef.select(this.loginIndex);
-     });
+  ionViewWillLeave() {
+    this.events.unsubscribe(EVENTS_KEY.USER_LOGIN);
   }
 }

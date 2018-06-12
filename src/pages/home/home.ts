@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ViewController, Events } from 'ionic-angular';
+import { NavController, NavParams, Events } from 'ionic-angular';
 import { item_list } from '../data/itemData';
 import { ItemModel } from '../model/ItemModel';
 import { DetailPage } from '../detail/detail';
@@ -21,18 +21,13 @@ export class HomePage {
   isMyItem: boolean = false;
   isMyFa: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParam: NavParams, public storage: Storage, public viewCtrl: ViewController, public events: Events) {
+  constructor(public navCtrl: NavController, public navParam: NavParams, public storage: Storage, public events: Events) {
     this.events.subscribe(EVENTS_KEY.REFRESH_HOME, (data) => {
       this.isMyItem = data.isMyItem;
       this.isMyFa = data.isMyFa;
+
+      console.log("refres home");
       console.log(this.isMyItem + ", " + this.isMyFa)
-
-      this.initItemList();
-    });
-
-    this.events.subscribe(EVENTS_KEY.REFRESH_TAB_PAGE, () => {
-      this.initItemList();
-      // this.events.unsubscribe(EVENTS_KEY.REFRESH_TAB_PAGE);
     })
   }
 
@@ -123,13 +118,17 @@ export class HomePage {
     }
   }
 
-  ionViewDidLoad() {
-    
+  ionViewDidEnter() {
+    console.log("did enter home");
+    this.initItemList();
   }
 
   ionViewWillLeave() {
+    console.log("leave page home")
     this.isMyItem = false;
     this.isMyFa = false;
+    
+    // this.events.unsubscribe(EVENTS_KEY.REFRESH_HOME);
   }
 
   getItems(ev: any) {

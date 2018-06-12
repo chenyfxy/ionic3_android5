@@ -26,7 +26,7 @@ import { EVENTS_KEY } from '../config/events_key';
   templateUrl: 'about.html'
 })
 export class AboutPage {
-  item: ItemModel;
+  item: ItemModel = new ItemModel();
   path: any;
   fileName: any;
   images: string[] = [];
@@ -36,15 +36,21 @@ export class AboutPage {
   constructor(public navCtrl: NavController, private toastUtils: ToastUtils, private storage: Storage,
     private imagePicker: ImagePicker, private alertCtrl: AlertController, public events: Events) {
 
-    this.initDatas();
-
-    this.events.subscribe(EVENTS_KEY.REFRESH_TAB_PAGE, () => {
-      this.initDatas();
-    });
   }
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
+    console.log("did enter page about")
+    let data = {
+      'isMyItem': false,
+      'isMyFa': false
+    }
+    this.events.publish(EVENTS_KEY.REFRESH_HOME, data);
 
+    this.initDatas();
+  }
+
+  ionViewWillLeave() {
+    console.log("leave page about")
   }
 
   initDatas() {
@@ -124,12 +130,6 @@ export class AboutPage {
               this.storage.set(SESSION_KEY.ALL_ITEMS, list);
 
               this.toastUtils.showToast('Publish successfully!', 'top');
-
-              let data = {
-                'isMyItem': false,
-                'isMyFa': false
-              }
-              this.events.publish(EVENTS_KEY.REFRESH_HOME, data);
 
               this.navCtrl.parent.select(0);
             }
