@@ -28,6 +28,8 @@ export class HomePage {
 
       console.log("refres home");
       console.log(this.isMyItem + ", " + this.isMyFa)
+
+      this.initItemList();
     })
   }
 
