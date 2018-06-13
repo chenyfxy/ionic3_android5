@@ -20,5 +20,10 @@
   "edit_user": "Edit user",
   "nick_name": "Nick name",
   "new_password": "New password",
+  "logout_key": "Logout",
+  "update": "Update",
+  "sign_in": "Sign in",
+  "user_name": "User name",
+  "please_login": "Please login",
   "changeLang": "Change language"
 }

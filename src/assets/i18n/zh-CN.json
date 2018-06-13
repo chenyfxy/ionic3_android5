@@ -20,5 +20,10 @@
   "edit_user": "用户修改",
   "nick_name": "昵称",
   "new_password": "新密码",
+  "logout_key": "注销",
+  "update": "更新",
+  "sign_in": "注册",
+  "user_name": "用户名",
+  "please_login": "请登陆",
   "changeLang": "改变语言"
 }

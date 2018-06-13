@@ -12,8 +12,6 @@ import { EVENTS_KEY } from '../config/events_key';
 import { UserModel } from '../model/UserModel';
 import { UserEditPage } from '../user-edit/user-edit';
 
-const base_img_url = './assets/imgs/';
-
 @Component({
   selector: 'page-contact',
   templateUrl: 'contact.html',
@@ -21,19 +19,21 @@ const base_img_url = './assets/imgs/';
 })
 export class ContactPage {
   loginUser: UserModel = new UserModel();
+  hasLogin: boolean = false;
 
   constructor(public navCtrl: NavController, private userService: UserService, public storage: Storage,
-  public callNumber: CallNumber, private alertCtrl: AlertController, private sharing: SocialSharing, public modalCtrl: ModalController,
-  public events: Events) {
+    public callNumber: CallNumber, private alertCtrl: AlertController, private sharing: SocialSharing, public modalCtrl: ModalController,
+    public events: Events) {
 
   }
 
-  ionViewDidEnter(){
+  ionViewDidEnter() {
+    console.log("DidEnter page contact")
     let data = {
       'isMyItem': false,
       'isMyFa': false
     }
-    this.events.publish(EVENTS_KEY.REFRESH_HOME, data); 
+    this.events.publish(EVENTS_KEY.REFRESH_HOME, data);
 
     this.initDatas();
   }
@@ -47,6 +47,7 @@ export class ContactPage {
       if (userObj == null) {
         this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((value) => {
           if (value != null) {
+            this.storage.get(SESSION_KEY.ALL_USERS).then(userList => {
             // this.userService.getUserByName(value).then(
             //   data => {
             //     this.result = JSON.parse(JSON.stringify(data));
@@ -55,37 +56,37 @@ export class ContactPage {
             //     this.userNickName = this.result.nickName;
             //   }).
             //   catch(err => {
-                const userSize = user_list.length;
-    
-                for (var i=0; i<userSize; i++) {
-                  let userObj = user_list[i];
-    
-                  if (userObj.userName === value) {
-                    this.loginUser.id = userObj.id;
-                    this.loginUser.userName = user_list[i].userName;
-                    this.loginUser.password = user_list[i].password;
-                    this.loginUser.nickName = user_list[i].nickName;
-                    this.loginUser.avatar = base_img_url + user_list[i].avatar;
-                    break;
-                  }
-                }
-    
-                this.storage.set(SESSION_KEY.LOGIN_USER, this.loginUser);
-              } else {
-                //this.navCtrl.setRoot(LoginPage);
+            for (var index in userList) {
+              let userObj = userList[index];
+
+              if (userObj.userName === value) {
+                this.loginUser = userObj;
+                break;
               }
-        //     )
-        //   }
+            }
+
+            this.storage.set(SESSION_KEY.LOGIN_USER, this.loginUser);
+
+            this.hasLogin = true;
+          });
+          } else {
+            //this.navCtrl.setRoot(LoginPage);
+            this.loginUser = new UserModel();
+            this.hasLogin = false;
+          }
+          //     )
+          //   }
+          
         })
       } else {
         this.loginUser = userObj;
+        this.hasLogin = true;
       }
     });
   }
 
   openModal() {
-    console.log("open user");
-    let modal = this.modalCtrl.create(UserEditPage, {loginUser: this.loginUser});
+    let modal = this.modalCtrl.create(UserEditPage, { loginUser: this.loginUser });
     modal.present();
   }
 
@@ -105,7 +106,7 @@ export class ContactPage {
   shareItem() {
     this.sharing.shareViaEmail('Ionic', 'Ionic shop', ['chenyfxy@hotmail.com']).then(() => {
 
-    }).catch(err => {console.log('sharing error:' + err)})
+    }).catch(err => { console.log('sharing error:' + err) })
   }
 
   callPhone() {
@@ -123,7 +124,7 @@ export class ContactPage {
     })
     alert.present();
 
-    this.navCtrl.setRoot(LoginPage);
+    this.gotoLogin();
   }
 
   showAbout() {
@@ -135,8 +136,14 @@ export class ContactPage {
     alert.present();
   }
 
+  gotoLogin() {
+    this.navCtrl.push(LoginPage);
+  }
+
   logout() {
+    this.storage.remove(SESSION_KEY.LOGIN_USER);
     this.storage.remove(SESSION_KEY.LOGIN_USERNAME);
-    this.navCtrl.setRoot(LoginPage);
+    
+    this.gotoLogin();
   }
 }

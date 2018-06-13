@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, App, Events, Tabs} from 'ionic-angular';
+import { NavController, NavParams, App, Events, Tabs, ModalController} from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpService } from "../services/HttpService";
 import { Storage } from '@ionic/storage';
@@ -9,8 +9,8 @@ import { SESSION_KEY } from '../config/session_key';
 import { SERVER_URL } from '../config/url_config';
 import { TranslateService } from 'ng2-translate';
 import { TabsPage } from '../tabs/tabs';
-import { user_list } from '../data/userData';
 import { EVENTS_KEY } from '../config/events_key';
+import { UserEditPage } from '../user-edit/user-edit';
 
 /**
  * Generated class for the LoginPage page.
@@ -35,7 +35,7 @@ export class LoginPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, private formBuilder: FormBuilder,
     private httpService: HttpService, private toastUtils : ToastUtils, private keyboard: Keyboard, private translate: TranslateService,
-    public events: Events) {
+    public events: Events, public modalCtrl: ModalController) {
 
     this.setDefaultValues();
     this.translate.addLangs(['zh-CN', 'en']);
@@ -82,20 +82,21 @@ export class LoginPage {
       this.storage.set(SESSION_KEY.REMEMBER_USER, {"userName": this.loginForm.value.userName, "password": this.loginForm.value.password});
     }
 
-    const userSize = user_list.length;
-
-    for (var i = 0; i < userSize; i++) {
-      if (user_list[i].userName === this.loginForm.value.userName && user_list[i].password === this.loginForm.value.password) {
-        this.toastUtils.showToast('Login successfully!', 'top');
-
-        this.storage.set(SESSION_KEY.LOGIN_USERNAME, this.loginForm.value.userName);
-
-        this.events.publish(EVENTS_KEY.USER_LOGIN); // refresh page
-
-        this.navCtrl.setRoot(TabsPage);
-        // this.navCtrl.parent.select(1);
+    this.storage.get(SESSION_KEY.ALL_USERS).then(userList => {
+      for (var i in userList) {
+        if (userList[i].userName === this.loginForm.value.userName && userList[i].password === this.loginForm.value.password) {
+          this.toastUtils.showToast('Login successfully!', 'top');
+  
+          this.storage.set(SESSION_KEY.LOGIN_USERNAME, this.loginForm.value.userName);
+  
+          this.events.publish(EVENTS_KEY.USER_LOGIN); // refresh page
+  
+          this.navCtrl.pop();
+          // this.navCtrl.setRoot(TabsPage);
+          // this.navCtrl.parent.select(1);
+        }
       }
-    }
+    })
 
 //     this.httpService.login(SERVER_URL.LOGIN_URL, JSON.stringify(this.loginForm.value)).subscribe(
 //       data => {
@@ -112,4 +113,10 @@ export class LoginPage {
 //       }
 //     )
   };
+
+  gotoCreateUser() {
+    let modal = this.modalCtrl.create(UserEditPage, {newUser: true});
+
+    modal.present();
+  }
 }

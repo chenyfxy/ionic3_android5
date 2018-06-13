@@ -41,8 +41,9 @@
       <ion-checkbox formControlName="checkedUser"></ion-checkbox>
     </div>
 
-    <div padding>
-      <button ion-button color="primary" block type="submit" [disabled]="!loginForm.valid">{{ 'login' | translate }}</button>
+    <div padding-left padding-right padding-bottom text-center>
+      <button ion-button color="primary" block text-capitalize type="submit" [disabled]="!loginForm.valid">{{ 'login' | translate }}</button>
+      <a (click)="gotoCreateUser()">{{ 'sign_in' | translate }}</a>
     </div>
   </form>
 </ion-content>

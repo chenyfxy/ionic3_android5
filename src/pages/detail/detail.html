@@ -13,7 +13,7 @@
 </ion-header>
 
 
-<ion-content style="margin-top:10px">
+<ion-content margin-top>
   <ion-slides autoplay="3000" loop="true" pager autoplayDisableOnInteraction="false" *ngIf="images != null && images.length > 1" class="slideClass">
     <ion-slide *ngFor="let imgItem of images">
       <img src="{{imgItem}}" imageViewer/>

@@ -7,7 +7,7 @@
 </ion-header>
 
 <ion-content class="bg-color">
-  <ion-list class="top-list">
+  <ion-list margin-top>
     <ion-item>
       <ion-label color="dark">{{ 'title' | translate }}</ion-label>
       <ion-input type="text" placeholder="Please input title" [(ngModel)]="item.title"></ion-input>
@@ -51,9 +51,10 @@
       <ion-toggle [(ngModel)]="man"></ion-toggle>
     </ion-item>
   </ion-list>
-  <div padding style="margin-top: -15px;">
-    <button ion-button block (click)="publish()">
-      {{ 'publish' | translate }}
+  <div padding-left padding-right>
+    <button ion-button block text-capitalize (click)="publish()">
+      <span *ngIf="hasLogin">{{ 'publish' | translate }}</span>
+      <span *ngIf="!hasLogin">{{ 'please_login' | translate }}</span>
     </button>
   </div>
 </ion-content>

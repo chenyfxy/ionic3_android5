@@ -16,7 +16,7 @@ import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker';
 
 import { Storage } from '@ionic/storage';
 import { user_list } from '../data/userData';
-import { formatDate } from '../utils/utils';
+import { formatDate, notBlank } from '../utils/utils';
 import { HomePage } from '../home/home';
 import { TabsPage } from '../tabs/tabs';
 import { EVENTS_KEY } from '../config/events_key';
@@ -32,6 +32,7 @@ export class AboutPage {
   images: string[] = [];
   man: boolean = false;
   loginUserName: any;
+  hasLogin: boolean = false;
 
   constructor(public navCtrl: NavController, private toastUtils: ToastUtils, private storage: Storage,
     private imagePicker: ImagePicker, private alertCtrl: AlertController, public events: Events) {
@@ -64,6 +65,9 @@ export class AboutPage {
             break;
           }
         }
+        this.hasLogin = true;
+      } else {
+        this.hasLogin = false;
       }
     });
     this.item = new ItemModel();
@@ -114,7 +118,7 @@ export class AboutPage {
     this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((data) => {
 
       if (data != null) {
-        if (this.item.title != '' && this.item.content != '' && this.images.length > 0 && this.item.price != null && this.item.phoneNumber != null && this.item.firstName != '') {
+        if (notBlank(this.item.title) && notBlank(this.item.content) && this.images.length > 0 && this.item.price != null && this.item.phoneNumber != null && notBlank(this.item.firstName)) {
           this.storage.get(SESSION_KEY.ALL_ITEMS).then(value => {
             if (value != null) {
               let list: ItemModel[] = value;
@@ -143,7 +147,7 @@ export class AboutPage {
         }
 
       } else {
-        this.navCtrl.setRoot(LoginPage);
+        this.navCtrl.push(LoginPage);
       }
 
     });

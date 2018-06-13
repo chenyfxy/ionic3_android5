@@ -7,12 +7,19 @@
 </ion-header>
 
 <ion-content class="bg-color">
-  <ion-list class="top-list">
-    <a ion-item (click)="openModal()">
+  <ion-list margin-top>
+    <a ion-item (click)="openModal()" *ngIf="hasLogin">
       <ion-avatar item-left>
         <img src="{{loginUser.avatar}}" />
       </ion-avatar>
-      <h2>{{loginUser.nickName}}</h2>
+      <h2>{{loginUser.userName}}</h2>
+      <p>{{ 'nick_name' | translate }}: {{loginUser.nickName}}</p>
+    </a>
+    <a ion-item (click)="gotoLogin()" *ngIf="!hasLogin">
+      <ion-avatar item-left>
+        <img src="./assets/imgs/user-unlogin.png" />
+      </ion-avatar>
+      <a>{{ 'please_login' | translate }}</a>
     </a>
   </ion-list>
 
@@ -46,9 +53,9 @@
     </button>
   </ion-list>
 
-  <div padding style="margin-top: -15px">
-    <button ion-button block (click)="logout()">
-      {{ 'logout' | translate }}
+  <div padding-left padding-right *ngIf="hasLogin">
+    <button ion-button block text-capitalize (click)="logout()">
+      {{ 'logout_key' | translate }}
     </button>
   </div>
 </ion-content>

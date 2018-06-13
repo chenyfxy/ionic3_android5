@@ -26,3 +26,7 @@ export const sortItem = () => {
 
     data.sort(compare);
 };
+
+export const notBlank = (value) => {
+    return value != "" && value != undefined;
+};
