@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpService } from "../services/HttpService";
 import { Storage } from '@ionic/storage';
 import { ToastUtils } from '../utils/ToastUtils';
-import { Keyboard } from '@ionic-native/keyboard';
+// import { Keyboard } from '@ionic-native/keyboard';
 import { SESSION_KEY } from '../config/session_key';
 import { SERVER_URL } from '../config/url_config';
 import { TranslateService } from 'ng2-translate';
@@ -33,7 +33,7 @@ export class LoginPage {
   pwshow: boolean = false;
 
   constructor(public navCtrl: NavController, public storage: Storage, private formBuilder: FormBuilder,
-    private httpService: HttpService, private toastUtils : ToastUtils, private keyboard: Keyboard, private translate: TranslateService,
+    private httpService: HttpService, private toastUtils : ToastUtils, private translate: TranslateService,
     public events: Events, public modalCtrl: ModalController) {
 
     this.setDefaultValues();
@@ -69,7 +69,7 @@ export class LoginPage {
 
   showOrHidePass() {
     console.log("log here")
-    this.keyboard.close();
+    // this.keyboard.close();
 
     this.pwshow = !this.pwshow;
   }

@@ -22,7 +22,7 @@ import { HttpService } from '../pages/services/HttpService';
 import { UserService } from '../pages/services/UserService';
 import { ToastUtils } from '../pages/utils/ToastUtils';
 import { Http } from '@angular/http';
-import { Keyboard } from '@ionic-native/keyboard';
+// import { Keyboard } from '@ionic-native/keyboard';
 
 import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
@@ -34,6 +34,8 @@ import { CallNumber } from '@ionic-native/call-number';
 import { SocialSharing } from '@ionic-native/social-sharing';
 
 import { ImagePicker } from '@ionic-native/image-picker';
+
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 export function createTranslateLoader(http: Http) {
   return new TranslateStaticLoader(http, './assets/i18n', '.json');
@@ -78,7 +80,7 @@ export function createTranslateLoader(http: Http) {
     SplashScreen,
     HttpService,
     ToastUtils,
-    Keyboard,
+    // Keyboard,
     UserService,
     FileTransfer,
     FileTransferObject,
@@ -88,6 +90,7 @@ export function createTranslateLoader(http: Http) {
     CallNumber,
     SocialSharing,
     ImagePicker,
+    LocalNotifications,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
