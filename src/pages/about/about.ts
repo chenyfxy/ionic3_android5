@@ -15,10 +15,7 @@ import { ToastUtils } from '../utils/ToastUtils';
 import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker';
 
 import { Storage } from '@ionic/storage';
-import { user_list } from '../data/userData';
 import { formatDate, notBlank } from '../utils/utils';
-import { HomePage } from '../home/home';
-import { TabsPage } from '../tabs/tabs';
 import { EVENTS_KEY } from '../config/events_key';
 
 @Component({
@@ -57,15 +54,17 @@ export class AboutPage {
   initDatas() {
     this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((value) => {
       if (value != null) {
-        const userSize = user_list.length;
+        this.storage.get(SESSION_KEY.ALL_USERS).then(userList => {
+          for (var index in userList) {
+            let userObj = userList[index];
 
-        for (var i = 0; i < userSize; i++) {
-          if (user_list[i].userName === value) {
-            this.loginUserName = user_list[i].userName;
-            break;
+            if (userObj.userName === value) {
+              this.loginUserName = userObj.userName;
+              break;
+            }
           }
-        }
-        this.hasLogin = true;
+          this.hasLogin = true;
+        });
       } else {
         this.hasLogin = false;
       }

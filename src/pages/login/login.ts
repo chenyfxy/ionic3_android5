@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, App, Events, Tabs, ModalController} from 'ionic-angular';
+import { NavController, Events, ModalController} from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpService } from "../services/HttpService";
 import { Storage } from '@ionic/storage';
@@ -8,7 +8,6 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { SESSION_KEY } from '../config/session_key';
 import { SERVER_URL } from '../config/url_config';
 import { TranslateService } from 'ng2-translate';
-import { TabsPage } from '../tabs/tabs';
 import { EVENTS_KEY } from '../config/events_key';
 import { UserEditPage } from '../user-edit/user-edit';
 
@@ -33,7 +32,7 @@ export class LoginPage {
   checkedUser : any;
   pwshow: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, private formBuilder: FormBuilder,
+  constructor(public navCtrl: NavController, public storage: Storage, private formBuilder: FormBuilder,
     private httpService: HttpService, private toastUtils : ToastUtils, private keyboard: Keyboard, private translate: TranslateService,
     public events: Events, public modalCtrl: ModalController) {
 

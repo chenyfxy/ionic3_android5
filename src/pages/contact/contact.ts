@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, ModalController, Events, NavParams } from 'ionic-angular';
+import { NavController, AlertController, ModalController, Events } from 'ionic-angular';
 import { SESSION_KEY } from '../config/session_key';
 import { LoginPage } from '../login/login';
-import { UserService } from '../services/UserService';
 import { Storage } from '@ionic/storage';
-import { user_list } from '../data/userData';
-import { HomePage } from '../home/home';
 import { CallNumber } from '@ionic-native/call-number';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { EVENTS_KEY } from '../config/events_key';
@@ -14,14 +11,13 @@ import { UserEditPage } from '../user-edit/user-edit';
 
 @Component({
   selector: 'page-contact',
-  templateUrl: 'contact.html',
-  providers: [UserService]
+  templateUrl: 'contact.html'
 })
 export class ContactPage {
   loginUser: UserModel = new UserModel();
   hasLogin: boolean = false;
 
-  constructor(public navCtrl: NavController, private userService: UserService, public storage: Storage,
+  constructor(public navCtrl: NavController, public storage: Storage,
     public callNumber: CallNumber, private alertCtrl: AlertController, private sharing: SocialSharing, public modalCtrl: ModalController,
     public events: Events) {
 

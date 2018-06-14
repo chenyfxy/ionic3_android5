@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Events } from 'ionic-angular';
+import { NavController, Events, LoadingController } from 'ionic-angular';
 import { item_list } from '../data/itemData';
 import { ItemModel } from '../model/ItemModel';
 import { DetailPage } from '../detail/detail';
 import { Storage } from '@ionic/storage';
 import { SESSION_KEY } from '../config/session_key';
-import { user_list } from '../data/userData';
 import { sortItem } from '../utils/utils';
 import { EVENTS_KEY } from '../config/events_key';
 
@@ -20,8 +19,9 @@ export class HomePage {
   items: ItemModel[];
   isMyItem: boolean = false;
   isMyFa: boolean = false;
+  loader: any;
 
-  constructor(public navCtrl: NavController, public navParam: NavParams, public storage: Storage, public events: Events) {
+  constructor(public navCtrl: NavController, public storage: Storage, public events: Events, public loadingCtrl: LoadingController) {
     this.events.subscribe(EVENTS_KEY.REFRESH_HOME, (data) => {
       this.isMyItem = data.isMyItem;
       this.isMyFa = data.isMyFa;
@@ -42,9 +42,7 @@ export class HomePage {
 
         sortItem();
 
-        let size = item_list.length;
-
-        for (var i = 0; i < size; i++) {
+        for (var i in item_list) {
           const itemObj = item_list[i];
 
           let model = new ItemModel();
@@ -79,28 +77,29 @@ export class HomePage {
     if (this.isMyItem) {
       this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((value) => {
         if (value != null) {
-          let myName = '';
+          this.storage.get(SESSION_KEY.ALL_USERS).then(userList => {
+            let myName = '';
 
-          const userSize = user_list.length;
+            for (var index in userList) {
+              let userObj = userList[index];
 
-          for (var i = 0; i < userSize; i++) {
-            if (user_list[i].userName === value) {
-              myName = user_list[i].userName;
-              break;
+              if (userObj.userName === value) {
+                myName = userObj.userName;
+                break;
+              }
             }
-          }
 
-          let size = this.allItems.length;
+            const copyItems: ItemModel[] = [];
 
-          const copyItems: ItemModel[] = [];
-
-          for (var j = 0; j < size; j++) {
-            if (this.allItems[j].seller === myName) {
-              copyItems.push(this.allItems[j]);
+            for (var j in this.allItems) {
+              if (this.allItems[j].seller === myName) {
+                copyItems.push(this.allItems[j]);
+              }
             }
-          }
 
-          this.allItems = copyItems;
+            this.allItems = copyItems;
+          }
+          )
         }
         this.items = this.allItems;
       })
@@ -120,16 +119,25 @@ export class HomePage {
     }
   }
 
+  ionViewWillEnter() {
+    this.loader = this.loadingCtrl.create({
+      content: "Please wait..."
+    });
+    this.loader.present();
+  }
+
   ionViewDidEnter() {
     console.log("did enter home");
     this.initItemList();
+
+    this.loader.dismiss();
   }
 
   ionViewWillLeave() {
     console.log("leave page home")
     this.isMyItem = false;
     this.isMyFa = false;
-    
+
     // this.events.unsubscribe(EVENTS_KEY.REFRESH_HOME);
   }
 
@@ -163,7 +171,6 @@ export class HomePage {
     this.storage.get(SESSION_KEY.ALL_ITEMS).then(value => {
       if (value != null) {
         let list: ItemModel[] = value;
-        let size = list.length;
 
         list.splice(list.indexOf(item), 1);
 
@@ -174,7 +181,6 @@ export class HomePage {
     this.storage.get(SESSION_KEY.FAVORITE_ITEMS).then(value => {
       if (value != null) {
         let list: ItemModel[] = value;
-        let size = list.length;
 
         list.splice(list.indexOf(item), 1);
 
@@ -198,7 +204,7 @@ export class HomePage {
     console.log('Begin async operation');
 
     this.initItemList();
-    
+
     setTimeout(() => {
       console.log('Async operation has ended');
       infiniteScroll.complete();

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NavParams, NavController, Navbar, Events} from 'ionic-angular';
 import { ItemModel } from '../model/ItemModel';
 import { CallNumber } from '@ionic-native/call-number';
