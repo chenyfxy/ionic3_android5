@@ -36,7 +36,7 @@ export class MyApp {
     this.localNotifications.schedule({ 
       id: 1, 
       title: 'Welcome to this app', 
-      text: '这是显示通知栏的内容',
+      text: 'You can visit these products',
       icon: 'file://assets/imgs/logo.png',
       smallIcon: 'res://ic_popup_reminder'
     });

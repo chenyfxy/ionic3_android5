@@ -19,11 +19,12 @@ const base_img_url = './assets/imgs/';
 export class TabsPage {
   @ViewChild('myTabs') tabRef: Tabs;
   tabRoots: Object[];
+  msgBadge: any;
 
   constructor(private storage: Storage, private navCtrl: NavController, public events: Events) {
-    this.tabRoots = [{ root: HomePage, tabTitle: 'home', tabIcon: 'home' },
-    { root: AboutPage, tabTitle: 'publish', tabIcon: 'add-circle' },
-    { root: ContactPage, tabTitle: 'personal', tabIcon: 'person' }];
+    this.tabRoots = [{ root: HomePage, tabTitle: 'home', tabIcon: 'home', hasBadge: false},
+    { root: AboutPage, tabTitle: 'publish', tabIcon: 'add-circle', hasBadge: false },
+    { root: ContactPage, tabTitle: 'personal', tabIcon: 'person', hasBadge: true }];
   }
 
   tabChange(tab: Tab) {
@@ -65,6 +66,9 @@ export class TabsPage {
   }
 
   ionViewDidEnter() {
+    this.storage.get(SESSION_KEY.MSG_BADGE).then(value => {
+      this.msgBadge = value;
+    })
     // this.events.subscribe(EVENTS_KEY.USER_LOGIN, () => {
     //   let currentTab = this.tabRef.getSelected();
 

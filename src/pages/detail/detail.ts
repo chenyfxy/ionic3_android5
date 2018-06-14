@@ -99,6 +99,15 @@ export class DetailPage {
       this.toastUtils.showToast('Save to my favorite successfully!', 'top');
 
       this.showStar = true;
+
+      this.storage.get(SESSION_KEY.MSG_BADGE).then(badgeVal => {
+        if (badgeVal == null) {
+          badgeVal = 0;
+        }
+        badgeVal ++;
+
+        this.storage.set(SESSION_KEY.MSG_BADGE, badgeVal);
+      })
     });
   }
 
@@ -115,6 +124,14 @@ export class DetailPage {
       this.toastUtils.showToast('Cancel my favorite successfully!', 'top');
 
       this.showStar = false;
+
+      this.storage.get(SESSION_KEY.MSG_BADGE).then(badgeVal => {
+        if (badgeVal != null) {
+          badgeVal --;
+
+          this.storage.set(SESSION_KEY.MSG_BADGE, badgeVal);
+        }
+      })
     });
   }
 
