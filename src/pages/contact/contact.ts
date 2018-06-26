@@ -8,6 +8,7 @@ import { SocialSharing } from '@ionic-native/social-sharing';
 import { EVENTS_KEY } from '../config/events_key';
 import { UserModel } from '../model/UserModel';
 import { UserEditPage } from '../user-edit/user-edit';
+import { MyMessagePage } from '../my-message/my-message';
 
 @Component({
   selector: 'page-contact',
@@ -36,6 +37,7 @@ export class ContactPage {
 
   ionViewWillLeave() {
     console.log("leave page contact")
+    this.events.publish(EVENTS_KEY.PUSH_MSG);
   }
 
   initDatas() {
@@ -83,6 +85,11 @@ export class ContactPage {
 
   openModal() {
     let modal = this.modalCtrl.create(UserEditPage, { loginUser: this.loginUser });
+    modal.present();
+  }
+
+  openMessage() {
+    let modal = this.modalCtrl.create(MyMessagePage);
     modal.present();
   }
 

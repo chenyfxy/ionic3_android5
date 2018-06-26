@@ -25,7 +25,7 @@
 
   <ion-list>
     <button ion-item (click)="gotoHome(false)">
-      <ion-icon name="add-circle" item-start color="primary"></ion-icon>
+      <ion-icon name="ios-add-circle-outline" item-start color="primary"></ion-icon>
       {{ 'my_publish' | translate}}
     </button>
     <button ion-item (click)="gotoHome(true)">
@@ -43,12 +43,16 @@
   </ion-list>
 
   <ion-list>
+    <button ion-item (click)="openMessage()">
+      <ion-icon name="ios-mail-outline" item-start color="primary"></ion-icon>
+      {{ 'my_messages' | translate }}
+    </button>
     <button ion-item (click)="clearStorage()">
       <ion-icon name="trash" item-start color="danger"></ion-icon>
       {{ 'clean_cache' | translate }}
     </button>
     <button ion-item (click)="showAbout()">
-      <ion-icon name="information-circle" item-start color="primary"></ion-icon>
+      <ion-icon name="ios-information-circle-outline" item-start color="secondary"></ion-icon>
       {{ 'about' | translate }}
     </button>
   </ion-list>

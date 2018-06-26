@@ -5,5 +5,6 @@ export const SESSION_KEY = {
         "FAVORITE_ITEMS": "favorite_items",
         "ALL_ITEMS": "all_items",
         "ALL_USERS": "all_users",
-        "MSG_BADGE": "msg_badge"
+        "MSG_BADGE": "msg_badge",
+        "MSG_LIST": "msg_list"
 }

@@ -7,9 +7,11 @@ import { Tabs, Tab, NavController, Events } from 'ionic-angular';
 import { SESSION_KEY } from '../config/session_key';
 import { Storage } from '@ionic/storage';
 import { LoginPage } from '../login/login';
-import { EVENTS_KEY } from '../config/events_key';
 import { user_list } from '../data/userData';
 import { UserModel } from '../model/UserModel';
+import { MessageModel } from '../model/MessageModel';
+import { message_list } from '../data/messageData';
+import { EVENTS_KEY } from '../config/events_key';
 
 const base_img_url = './assets/imgs/';
 
@@ -19,7 +21,7 @@ const base_img_url = './assets/imgs/';
 export class TabsPage {
   @ViewChild('myTabs') tabRef: Tabs;
   tabRoots: Object[];
-  msgBadge: any;
+  msgBadge: any = null;
 
   constructor(private storage: Storage, private navCtrl: NavController, public events: Events) {
     this.tabRoots = [{ root: HomePage, tabTitle: 'home', tabIcon: 'home', hasBadge: false},
@@ -61,22 +63,56 @@ export class TabsPage {
     });
   }
 
+  initMsgList() {
+    this.storage.get(SESSION_KEY.MSG_LIST).then(value => {
+      let msgList : MessageModel[] = [];
+      
+      if (value == null) {
+        for (var index in message_list) {
+            let messageRow = new MessageModel();
+            messageRow.id = message_list[index].id;
+            messageRow.message = message_list[index].message;
+            messageRow.read = message_list[index].read;
+            messageRow.receiver = message_list[index].receiver;
+    
+            msgList.push(messageRow);
+        }
+        this.storage.set(SESSION_KEY.MSG_LIST, msgList);
+      }
+
+      this.countMsg();
+    });
+  }
+
   ionViewDidLoad() {
    this.initUserList();
+
+   this.initMsgList();
   }
 
   ionViewDidEnter() {
-    this.storage.get(SESSION_KEY.MSG_BADGE).then(value => {
-      this.msgBadge = value;
-    })
-    // this.events.subscribe(EVENTS_KEY.USER_LOGIN, () => {
-    //   let currentTab = this.tabRef.getSelected();
+    this.events.subscribe(EVENTS_KEY.PUSH_MSG, () => {
+      this.countMsg();
+    });
+  }
 
-    //   this.tabRef.select(currentTab);
-    // });
+  countMsg() {
+    this.storage.get(SESSION_KEY.MSG_LIST).then(value => {
+      if (value == null) {
+        this.msgBadge = null
+      } else {
+        this.msgBadge = 0;
+        let msgList : MessageModel[] = value;
+        
+        for (var index in msgList) {
+          if (!msgList[index].read) {
+            this.msgBadge ++;
+          }
+        }
+      }
+    })
   }
 
   ionViewWillLeave() {
-    // this.events.unsubscribe(EVENTS_KEY.USER_LOGIN);
   }
 }

@@ -12,6 +12,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from '../pages/login/login';
 import { DetailPage } from '../pages/detail/detail';
 import { UserEditPage } from '../pages/user-edit/user-edit';
+import { MyMessagePage } from '../pages/my-message/my-message';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -50,7 +51,8 @@ export function createTranslateLoader(http: Http) {
     TabsPage,
     LoginPage,
     DetailPage,
-    UserEditPage
+    UserEditPage,
+    MyMessagePage
   ],
   imports: [
     BrowserModule,
@@ -73,7 +75,8 @@ export function createTranslateLoader(http: Http) {
     TabsPage,
     LoginPage,
     DetailPage,
-    UserEditPage
+    UserEditPage,
+    MyMessagePage
   ],
   providers: [
     StatusBar,

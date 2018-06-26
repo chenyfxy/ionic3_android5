@@ -8,6 +8,7 @@ import { Storage } from '@ionic/storage';
 import { SESSION_KEY } from '../config/session_key';
 import { TabsPage } from '../tabs/tabs';
 import { EVENTS_KEY } from '../config/events_key';
+import { MessageModel } from '../model/MessageModel';
 
 /**
  * Generated class for the DetailPage page.
@@ -66,7 +67,7 @@ export class DetailPage {
 
     this.events.publish(EVENTS_KEY.REFRESH_HOME, this.dataParam);
     console.log("leave detail page")
-    // this.navCtrl.setRoot(TabsPage);
+    this.events.publish(EVENTS_KEY.PUSH_MSG);
   }
 
   checkStar() {
@@ -100,13 +101,23 @@ export class DetailPage {
 
       this.showStar = true;
 
-      this.storage.get(SESSION_KEY.MSG_BADGE).then(badgeVal => {
-        if (badgeVal == null) {
-          badgeVal = 0;
-        }
-        badgeVal ++;
+      this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((username) => {
+        this.storage.get(SESSION_KEY.MSG_LIST).then(valueList => {
+          let msgList : MessageModel[] = [];
 
-        this.storage.set(SESSION_KEY.MSG_BADGE, badgeVal);
+          if (valueList != null) {
+            msgList = valueList;
+          }
+          let msgRow : MessageModel = new MessageModel();
+          msgRow.id = msgList.length == 0 ? 1 : msgList[msgList.length - 1].id + 1;
+          msgRow.message = this.item.title + "had been saved to favorite by " + username;
+          msgRow.receiver = this.item.seller;
+          msgRow.read = false;
+
+          msgList.push(msgRow);
+
+          this.storage.set(SESSION_KEY.MSG_LIST, msgList);
+        })
       })
     });
   }
@@ -125,12 +136,23 @@ export class DetailPage {
 
       this.showStar = false;
 
-      this.storage.get(SESSION_KEY.MSG_BADGE).then(badgeVal => {
-        if (badgeVal != null) {
-          badgeVal --;
+      this.storage.get(SESSION_KEY.LOGIN_USERNAME).then((username) => {
+        this.storage.get(SESSION_KEY.MSG_LIST).then(valueList => {
+          let msgList : MessageModel[] = [];
 
-          this.storage.set(SESSION_KEY.MSG_BADGE, badgeVal);
-        }
+          if (valueList != null) {
+            msgList = valueList;
+          }
+          let msgRow : MessageModel = new MessageModel();
+          msgRow.id = msgList.length == 0 ? 1 : msgList[msgList.length - 1].id + 1;
+          msgRow.message = this.item.title + "had been removed to favorite by " + username;
+          msgRow.receiver = this.item.seller;
+          msgRow.read = false;
+
+          msgList.push(msgRow);
+
+          this.storage.set(SESSION_KEY.MSG_LIST, msgList);
+        })
       })
     });
   }

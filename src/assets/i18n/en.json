@@ -26,5 +26,8 @@
   "sign_in": "Sign in",
   "user_name": "User name",
   "please_login": "Please login",
+  "my_messages": "My messages",
+  "read_messages": "Read messages",
+  "unread_messages": "Unread messages",
   "changeLang": "Change language"
 }
